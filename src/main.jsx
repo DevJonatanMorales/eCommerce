@@ -6,10 +6,13 @@ import './main.css'
 import App from './App'
 
 import { Header } from './components/Header'
+import { CarucelBanner } from './components/CarucelBanner';
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>    
     <Header/>
-    <App />
+    <CarucelBanner/>
+    <App/>
   </React.StrictMode>,
 )
