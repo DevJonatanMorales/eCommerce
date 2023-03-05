@@ -1,7 +1,32 @@
-import React from 'react'
+import React from "react";
+import { allCategorias } from "../functions";
+import { useEffect, useState } from "react";
 
 export const ShowCategorias = () => {
+  const [categorias, setCategorias] = useState(null);
+
+  useEffect(() => {
+    allCategorias(setCategorias);
+  }, []);
+
+console.log(categorias);
+
   return (
-    <div>ShowCategorias</div>
-  )
-}
+    <div className="container text-center">
+      <div className="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+        {
+          categorias != null ? 
+            categorias.map((categoria) => (
+              <div key={categoria.id} class="bg-card col card my-2 mx-auto text-center bg-body-secondary" style={{width: '20rem'}}>
+                <img src={categoria.imagenes.normal} class="card-img-top m-3" style={{width: '18rem'}} alt="Error al cargar"/>
+                <div class="card-body">
+                  <a className="btn btn-dark" href={`/catagoria/${categoria.id}`} > {categoria.nombre} </a>
+                </div>
+              </div>
+            ))
+          : ('No hay categorias')
+        }
+      </div>
+    </div>
+  );
+};
