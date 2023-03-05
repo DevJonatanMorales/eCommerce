@@ -16,12 +16,14 @@ export const ShowCategorias = () => {
         {
           categorias != null ? 
             categorias.map((categoria) => (
+              categoria.id != 4 ? (
               <div key={categoria.id} class="bg-card col card my-2 p-3 mx-auto text-center bg-body-secondary" style={{width: '21rem'}}>
                 <img src={categoria.imagenes.normal} class="card-img-top mx-auto" style={{width: '18rem'}} alt="Error al cargar"/>
                 <div class="card-body m-0">
-                  <a className="btn btn-dark" href={`/catagoria/${categoria.id}`} > {categoria.nombre} </a>
+                  <a className="btn btn-dark" href={`/catagoria/${categoria.id}/nombre/${categoria.nombre}`} > {categoria.nombre} </a>
                 </div>
               </div>
+              ) : ('')
             ))
           : ('No hay categorias')
         }
