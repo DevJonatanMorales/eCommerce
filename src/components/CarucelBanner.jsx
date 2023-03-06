@@ -8,17 +8,15 @@ export const CarucelBanner = () => {
     allCategorias(setCategorias);
   }, []);
 
-  console.log(categorias);
-
   return (
-    <div id="carouselExample" className="mb-5 container-fluid carousel slide">
+    <div id="carouselExampleAutoplaying" class="mb-3 carousel slide" data-bs-ride="carousel">
       <div className="carousel-inner">
         {categorias != null
           ? categorias.map((categoria) => (
               <div className={categoria.id == '1' ? 'carousel-item active' : 'carousel-item'} key={categoria.id}>
                 <img
                   src={categoria.imagenes.normal}
-                  className="d-block w-100 img"
+                  className="rounded d-block w-100 imgmx-1"
                   alt="..." style={{ height: "60vh" }}                  
                 />
                 
@@ -30,24 +28,14 @@ export const CarucelBanner = () => {
             ))
           : "No hay categorias"
           }
-      </div>
-      <button
-        className="carousel-control-prev"
-        type="button"
-        data-bs-target="#carouselExample"
-        data-bs-slide="prev"
-      >
-        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Previous</span>
+      </div>      
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
       </button>
-      <button
-        className="carousel-control-next"
-        type="button"
-        data-bs-target="#carouselExample"
-        data-bs-slide="next"
-      >
-        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Next</span>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
       </button>
     </div>
   );
