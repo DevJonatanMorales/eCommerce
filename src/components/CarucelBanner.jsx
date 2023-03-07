@@ -9,31 +9,61 @@ export const CarucelBanner = () => {
   }, []);
 
   return (
-    <div id="carouselExampleAutoplaying" class="mb-3 carousel slide" data-bs-ride="carousel">
+    <div
+      id="carouselExampleAutoplaying"
+      class="mb-3 carousel slide"
+      data-bs-ride="carousel"
+    >
       <div className="carousel-inner">
-        {categorias != null
-          ? categorias.map((categoria) => (
-              <div className={categoria.id == '1' ? 'carousel-item active' : 'carousel-item'} key={categoria.id}>
-                <img
-                  src={categoria.imagenes.normal}
-                  className="rounded d-block w-100 imgmx-1"
-                  alt="..." style={{ height: "60vh" }}                  
-                />
-                
-                <div class="carousel-caption d-none d-md-block">
-                  <h5> {categoria.nombre} </h5>
-                </div>
+        {categorias != null ? (
+          categorias.map((categoria) => (
+            <div
+              className={
+                categoria.id == "1" ? "carousel-item active" : "carousel-item"
+              }
+              key={categoria.id}
+            >
+              <img
+                src={categoria.imagenes.normal}
+                className="rounded d-block w-100 imgmx-1"
+                alt="..."
+                style={{ height: "60vh" }}
+              />
 
+              <div class="carousel-caption d-none d-md-block">
+                <h5> {categoria.nombre} </h5>
               </div>
-            ))
-          : "No hay categorias"
-          }
-      </div>      
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+            </div>
+          ))
+        ) : (
+          <div className="container-fluid">
+            <div className="row mt-3">
+              <div className="col-md-4 offset-4">
+                <div className="d-grid mx-auto">
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="prev"
+      >
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="next"
+      >
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
