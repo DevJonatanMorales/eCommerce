@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const url = 'http://173.254.242.213:8080/clientapp-web/webresources/getMenus/APP'
 
@@ -12,6 +14,17 @@ export const Categoria = async (id,state) => {
     let _id = parseInt(id) - 1;
     const result = await axios.get(url);
     state(result.data.categorias[_id].menus);
+}
+
+export const ShowAlert = (msj, icon, focu='') => {
+    const MySwal = withReactContent(Swal);
+
+    MySwal.fire({
+        title: 'eCommer',
+        text: msj,
+        confirmButtonText: "Aceptar",
+        icon: icon
+    })
 }
 
 export const ProductsCounter = () => {
