@@ -30,7 +30,7 @@ export const CarucelBanner = () => {
                 style={{ height: "60vh" }}
               />
 
-              <div class="carousel-caption d-none d-md-block">
+              <div className="carousel-caption d-none d-md-block">
                 <h5> {categoria.nombre} </h5>
               </div>
             </div>

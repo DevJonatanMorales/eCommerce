@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Categoria, ProductsCounter } from "../functions";
+import { Categoria, ProductsCounter, ShowAlert } from "../functions";
 import { TabsCategorias } from "./TabsCategorias";
 
 export const ShowProducts = () => {
@@ -23,12 +23,23 @@ export const ShowProducts = () => {
   };
 
   //* validamos los datos a almacenar
-  const ValidarDatos = (id, img, nombre, descripcion, precio) => {
-    setId(id);
-    setImg(img);
-    setNombre(nombre);
-    setDescripcion(descripcion);
-    setPrecio(precio);
+  const ValidarDatos = () => {
+    let totalPagar = 0;
+    
+    if (count > 0) {
+      totalPagar = precio * count;
+
+      localStorage.setItem("compras", JSON.stringify([...JSON.parse(localStorage.getItem("compras") || "[]"), { NomProducto: nombre, canticad: count, total: totalPagar }]));
+      
+      ShowAlert("Añadido a su orden", "success");
+
+      document.getElementById("btnCloseModel").click();
+
+      
+    } else {
+      ShowAlert("Por favor, ingrese la cantidad de producto", "warning");
+    }
+
   };
 
   useEffect(() => {
@@ -147,7 +158,7 @@ export const ShowProducts = () => {
                           className="btn btn-dark"
                           onClick={decrement}
                         >
-                          <i class="fa-solid fa-minus"></i>
+                          <i className="fa-solid fa-minus"></i>
                         </button>
                         <p className="text-dark my-auto">Cantidad: {count} </p>
                         <button
@@ -170,10 +181,11 @@ export const ShowProducts = () => {
                 type="button"
                 className="btn btn-danger"
                 data-bs-dismiss="modal"
+                id="btnCloseModel"
               >
                 <i className="fa-solid fa-ban"></i> Cancelar
               </button>
-              <button type="button" className="btn btn-success">
+              <button type="button" onClick={ValidarDatos} className="btn btn-success">
                 <i className="fa-solid fa-cart-plus"></i> Añadir
               </button>
             </div>
