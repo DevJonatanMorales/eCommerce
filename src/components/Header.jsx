@@ -2,7 +2,7 @@ import { CardProductos } from "./cardproductos";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-window.onload = loadCompras;
+//window.onload = loadCompras;
 
 let compras = null;
 
@@ -12,40 +12,38 @@ if (localStorage.getItem("compras")) {
 
 function loadCompras() {
   const compras = Array.from(JSON.parse(localStorage.getItem("compras")));
-  
+
   if (compras.length > 0) {
     counts.classList.remove(`fa-0`);
     counts.classList.add(`fa-${compras.length}`);
-
   } else {
     counts.classList.add(`fa-0`);
   }
-
 }
 
 const EliminarOrden = () => {
   const MySwal = withReactContent(Swal);
 
-    MySwal.fire({
-      title: "Seguro de eliminar?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Si, eliminar",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        localStorage.clear();
-        loadTasks();
-      } else {
-        ShowAlert("La orden no fue eliminada", "info");
-      }
-    });
-}
+  MySwal.fire({
+    title: "Seguro de eliminar?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Si, eliminar",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      localStorage.clear();
+      loadTasks();
+    } else {
+      ShowAlert("La orden no fue eliminada", "info");
+    }
+  });
+};
 
 export const Header = () => {
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-dark">
+      <nav className="navbar navbar-expand-lg bg-dark" tabIndex={1}>
         <div className="container-fluid d-flex px-3">
           <a className="navbar-brand text-light" href="/">
             <i className="fa-sharp fa-solid fa-dumpster"></i> eCommer
@@ -67,7 +65,7 @@ export const Header = () => {
 
       <div
         className="offcanvas offcanvas-end fondo"
-        tabindex="-1"
+        tabIndex={2}
         id="offcanvas"
         aria-labelledby="offcanvasLabel"
       >
@@ -83,23 +81,21 @@ export const Header = () => {
           ></button>
         </div>
         <div className="offcanvas-body" id="ShowCompras">
-            {
-              compras != null ? (
-                compras.map((compra) => (
-                  <CardProductos 
-                    name={compra.NomProducto} 
-                    cantidad={compra.canticad} 
-                    total={compra.total} 
-                  />
-                ))
-              ): (
-                <div className="alert alert-secondary" role="alert">
-                 No hay ordenes
-                </div>
-              )
-            }
+          {compras != null ? (
+            compras.map((compra) => (
+              <CardProductos
+                name={compra.NomProducto}
+                cantidad={compra.canticad}
+                total={compra.total}
+              />
+            ))
+          ) : (
+            <div className="alert alert-secondary" role="alert">
+              No hay ordenes
+            </div>
+          )}
         </div>
-        <div className="offcanvas-footer" id="ShowCompras">            
+        <div className="offcanvas-footer" id="ShowCompras">
           <button
             type="button"
             className="btn btn-ms btn-danger m-2"
