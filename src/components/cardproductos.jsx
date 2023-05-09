@@ -15,16 +15,31 @@ function removeCompras(event) {
 export const CardProductos = (props) => {
   return (
     <div className="card Categorias p-1" key={props.name}>
-        <div className="card-body">
-            <h5 className="card-title">PLATO: {props.name} <br /> CANTIDAD: {props.cantidad} <br /> TOTAL: ${props.total} </h5>
-            <button
-              className="btn btn-dark"
-              type="button"
-              onClick={() => removeCompras(this)}
-               ><i className="fa-solid fa-xmark"></i> Eliminar
-            </button>
-        </div>
-    </div>
+      <div className="card-body">
+        <p className="text-md-start m-0 mb-1">
+          PLATO: <span className="text-sm-start m-0 mb-1">
+            {props.name}
+          </span>
+        </p>
+        <p className="text-md-start m-0 mb-1">
+          CANTIDAD: <span className="text-sm-start m-0 mb-1">
+            {props.cantidad}
+          </span>
+        </p>
+        <p className="text-md-start m-0 mb-1 ">
+          TOTAL: <span className="text-sm-start m-0 mb-1">
+            ${props.total}
+          </span>
+        </p>
+        <button
+          className="btn btn-dark"
+          type="button"
+          style={{ width: "100%" }}
+          onClick={() => removeCompras(this)}
+        ><i className="fa-solid fa-xmark"></i> Eliminar
+        </button>
+      </div>
+    </div >
   )
 }
 

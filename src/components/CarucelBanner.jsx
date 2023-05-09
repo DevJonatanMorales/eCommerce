@@ -1,9 +1,10 @@
-import React from "react";
-import { allCategorias } from "../functions";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { DataContext } from "../context/DataContext";
+import Spinners from "./Spinners";
 
 export const CarucelBanner = () => {
   const [categorias, setCategorias] = useState(null);
+  const { allCategorias } = useContext(DataContext);
   useEffect(() => {
     allCategorias(setCategorias);
   }, []);
@@ -26,7 +27,7 @@ export const CarucelBanner = () => {
               <img
                 src={categoria.imagenes.normal}
                 className="rounded d-block w-100 imgmx-1"
-                alt="..."
+                alt={categoria.nombre}
                 style={{ height: "60vh" }}
               />
 
@@ -36,17 +37,7 @@ export const CarucelBanner = () => {
             </div>
           ))
         ) : (
-          <div className="container-fluid">
-            <div className="row mt-3">
-              <div className="col-md-4 offset-4">
-                <div className="d-grid mx-auto">
-                  <div className="spinner-border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Spinners />
         )}
       </div>
       <button

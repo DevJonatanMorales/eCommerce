@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { DataContext } from "../context/DataContext";
 import { useParams } from "react-router-dom";
-import { Categoria, ProductsCounter, ShowAlert } from "../functions";
+import { ProductsCounter, ShowAlert } from "../functions";
 import { TabsCategorias } from "./TabsCategorias";
+import Spinners from "./Spinners";
 
 export const ShowProducts = () => {
+  const { Categoria, AgregarCompras } = useContext(DataContext)
+
   const { count, increment, decrement, reset } = ProductsCounter();
   const params = useParams();
   const [categoria, setCategoria] = useState(null);
@@ -13,6 +17,10 @@ export const ShowProducts = () => {
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState("");
 
+  useEffect(() => {
+    Categoria(params.categoria, setCategoria);
+  }, [params]);
+
   //* Funcion que se encarga de abrir la ventan modal
   const OpenModal = (id, img, nombre, descripcion, precio) => {
     setId(id);
@@ -20,36 +28,43 @@ export const ShowProducts = () => {
     setNombre(nombre);
     setDescripcion(descripcion);
     setPrecio(precio);
+
   };
 
   //* validamos los datos a almacenar
   const ValidarDatos = () => {
     let totalPagar = 0;
-    
+
     if (count > 0) {
       totalPagar = precio * count;
 
-      localStorage.setItem("compras", JSON.stringify([...JSON.parse(localStorage.getItem("compras") || "[]"), { NomProducto: nombre, canticad: count, total: totalPagar }]));
-      
+      let datosCompras = {
+        nombre: nombre,
+        canticad: count,
+        totalPagar: totalPagar
+      }
+
+      AgregarCompras(datosCompras)
+
       ShowAlert("Añadido a su orden", "success");
-
       document.getElementById("btnCloseModel").click();
-
-      
     } else {
       ShowAlert("Por favor, ingrese la cantidad de producto", "warning");
     }
-
   };
 
-  useEffect(() => {
-    Categoria(params.categoria, setCategoria);
-  }, []);
+  const ValidarBoton = () => {
+    if (count === 1) {
+      document.getElementById('btnDecrement').disabled = false;
+    } else {
+      document.getElementById('btnDecrement').disabled = true;
+    }
+  }
 
   return (
     <>
-      <TabsCategorias/>
-      <div className="container text-center pt-2">
+      <TabsCategorias />
+      <div tabIndex={2} className="container text-center pt-2">
         <div className="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
           {categoria != null ? (
             categoria.map((producto) => (
@@ -60,57 +75,44 @@ export const ShowProducts = () => {
               >
                 <img
                   src={
-                    producto.imagenes.normal == null
-                      ? producto.imagenes.unavailable
-                      : producto.imagenes.normal
+                    producto.imagenes.normal
                   }
                   className="rounded card-img-top mx-auto"
                   style={{ width: "18rem" }}
                   alt="Error al cargar"
                 />
 
-                <div className="card-body m-0">
-                  <h5 className="card-title">{producto.nombre}</h5>
-                  <div className="d-flex justify-content-between">
-                    <p style={{ width: "70%" }}>{producto.descripcion}</p>
-                    <button
-                      style={{ width: "70px" }}
-                      type="button"
-                      id={producto.id}
-                      className="btn btn-dark my-auto"
-                      data-bs-toggle="modal"
-                      data-bs-target="#exampleModal"
-                      onClick={() =>
-                        OpenModal(
-                          producto.id,
-                          producto.imagenes.normal == null
-                            ? producto.imagenes.unavailable
-                            : producto.imagenes.normal,
-                          producto.nombre,
-                          producto.descripcion,
-                          producto.precio
-                        )
-                      }
-                    >
-                      <i className="fa-solid fa-dollar-sign"></i>{" "}
-                      {producto.precio}
-                    </button>
+                <div className="card-body m-0 position-relative">
+                  <h5 className="card-title fw-bold">{producto.nombre}</h5>
+                  <div className="d-flex justify-content-between mb-3">
+                    <p className="text-sm-start fw-normal" >{producto.descripcion}</p>
                   </div>
+
+                  <button
+                    style={{ width: "90%" }}
+                    type="button"
+                    id={producto.id}
+                    className="btn btn-dark position-absolute bottom-0"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    onClick={() =>
+                      OpenModal(
+                        producto.id,
+                        producto.imagenes.normal,
+                        producto.nombre,
+                        producto.descripcion,
+                        producto.precio
+                      )
+                    }
+                  >
+                    <i className="fa-solid fa-dollar-sign"></i>{" "}
+                    {producto.precio}
+                  </button>
                 </div>
               </div>
             ))
           ) : (
-            <div className="container-fluid">
-              <div className="row mt-3">
-                <div className="col-md-4 offset-4">
-                  <div className="d-grid mx-auto">
-                    <div className="spinner-border" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Spinners />
           )}
         </div>
       </div>
@@ -131,6 +133,7 @@ export const ShowProducts = () => {
               <button
                 type="button"
                 className="btn-close"
+                onClick={reset}
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -156,14 +159,19 @@ export const ShowProducts = () => {
                       <div className="d-flex justify-content-between m-0">
                         <button
                           className="btn btn-dark"
-                          onClick={decrement}
+                          onClick={() => {
+                            decrement()
+                          }}
+                          id="btnDecrement"
                         >
                           <i className="fa-solid fa-minus"></i>
                         </button>
                         <p className="text-dark my-auto">Cantidad: {count} </p>
                         <button
                           className="btn btn-dark"
-                          onClick={increment}
+                          onClick={() => {
+                            increment()
+                          }}
                         >
                           <i className="fa-solid fa-plus"></i>
                         </button>
@@ -185,7 +193,11 @@ export const ShowProducts = () => {
               >
                 <i className="fa-solid fa-ban"></i> Cancelar
               </button>
-              <button type="button" onClick={ValidarDatos} className="btn btn-success">
+              <button
+                type="button"
+                onClick={ValidarDatos}
+                className="btn btn-success"
+              >
                 <i className="fa-solid fa-cart-plus"></i> Añadir
               </button>
             </div>

@@ -5,15 +5,17 @@ import withReactContent from "sweetalert2-react-content";
 
 const url = 'http://173.254.242.213:8080/clientapp-web/webresources/getMenus/APP'
 
-const allCategorias = async (state) => {
-    const result = await axios.get(url);
-    state(result.data.categorias);
+const allCategorias = (state) => {
+    fetch(url)
+    .then(response => response.json())
+    .then(data => state(data.categorias));
 }
 
-export const Categoria = async (id,state) => {
+export const Categoria = (id,state) => {
     let _id = parseInt(id) - 1;
-    const result = await axios.get(url);
-    state(result.data.categorias[_id].menus);
+    fetch(url)
+    .then(response => response.json())
+    .then(data => state(data.categorias[_id].menus));
 }
 
 export const ShowAlert = (msj, icon, focu='') => {

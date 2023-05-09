@@ -1,11 +1,14 @@
-import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ShowCategorias } from "./components/ShowCategorias";
-import { ShowProducts } from "./components/ShowProducts";
+import { ShowCategorias } from "../components/ShowCategorias";
+import { ShowProducts } from "../components/ShowProducts";
+import { Header } from "../components/Header";
+import { CarucelBanner } from "../components/CarucelBanner";
 
-function App() {
+export const App = () => {
   return (
     <BrowserRouter>
+      <Header />
+      <CarucelBanner />
       <Routes>
         <Route
           path="/eCommerce/"
@@ -20,4 +23,3 @@ function App() {
   );
 }
 
-export default App;
