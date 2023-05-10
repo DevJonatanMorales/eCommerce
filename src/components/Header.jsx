@@ -1,12 +1,15 @@
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+
+import { DataContext } from "../context/DataContext";
+import { CardProductos } from "./CardProductos";
+
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { DataContext } from "../context/DataContext";
-import { useContext, useEffect } from "react";
-import { CardProductos } from "./cardproductos";
 
 export const Header = () => {
-  const { compras } = useContext(DataContext)
+
+  const { compras, total } = useContext(DataContext)
 
   const EliminarOrden = () => {
     const MySwal = withReactContent(Swal);
@@ -15,12 +18,13 @@ export const Header = () => {
       title: "Seguro de eliminar?",
       icon: "question",
       showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
       confirmButtonText: "Si, eliminar",
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.clear();
-        setDatosCompras(null)
+        CancelarOrden
       } else {
         ShowAlert("La orden no fue eliminada", "info");
       }
@@ -72,26 +76,22 @@ export const Header = () => {
           {compras.length >= 1 ? (
             compras.map((compra) => (
               <CardProductos
-                name={compra.NomProducto}
-                cantidad={compra.canticad}
-                total={compra.total}
+                producto={compra}
               />
             ))
           ) : (
-            <div className="alert alert-secondary" role="alert">
+            <div className="alert alert-secondary" role="alert"
+            >
               No hay ordenes
             </div>
           )}
         </div>
         <div className="offcanvas-footer px-2" id="ShowCompras">
-          <button
-            type="button"
-            className="btn btn-ms btn-danger mb-2"
-            onClick={() => EliminarOrden()}
-            style={{ width: "100%" }}
+
+          <div className="alert alert-secondary" role="alert"
           >
-            <i className="fa-solid fa-trash-can"></i> Cancelar Orden
-          </button>
+            Total a pagar: ${total}
+          </div>
         </div>
       </div>
     </>

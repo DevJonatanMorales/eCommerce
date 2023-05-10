@@ -39,6 +39,8 @@ export const ShowProducts = () => {
       totalPagar = precio * count;
 
       let datosCompras = {
+        id_producto: id,
+        img: img,
         nombre: nombre,
         canticad: count,
         totalPagar: totalPagar
