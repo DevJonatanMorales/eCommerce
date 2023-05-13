@@ -4,32 +4,9 @@ import { Link } from "react-router-dom";
 import { DataContext } from "../context/DataContext";
 import { CardProductos } from "./CardProductos";
 
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-
 export const Header = () => {
 
   const { compras, total } = useContext(DataContext)
-
-  const EliminarOrden = () => {
-    const MySwal = withReactContent(Swal);
-
-    MySwal.fire({
-      title: "Seguro de eliminar?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: "Si, eliminar",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        CancelarOrden
-      } else {
-        ShowAlert("La orden no fue eliminada", "info");
-      }
-    });
-  };
 
   return (
     <>
@@ -38,7 +15,7 @@ export const Header = () => {
 
           <Link
             className="navbar-brand text-light"
-            to={"//localhost:5173/eCommerce/"}
+            to={"https://devjonatanmorales.github.io/eCommerce/"}
           > <i className="fa-sharp fa-solid fa-dumpster"></i> eCommer </Link>
 
           <button

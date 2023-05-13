@@ -33,7 +33,7 @@ export const CardProductos = ({ producto }) => {
 
         <div className="row row-cols-2 row-cols-lg-2 g-2 g-lg-2 mb-3">
           <div className="col">
-            <img className='rounded' style={{ width: "100%" }} src={producto.imgProducto} alt="" srcset="" />
+            <img className='rounded' style={{ width: "100%" }} src={producto.imgProducto} alt={producto.NomProducto} />
           </div>
           <div className="col">
             <input type="hidden" id={`idProducto__${producto.idProducto}`} value={producto.idProducto} />

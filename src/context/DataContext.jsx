@@ -15,24 +15,35 @@ const Categoria = (id, state) => {
 
 export const DataProvider = ({ children }) => {
     const [compras, setCompras] = useState([]);
-    const [total, setTotal] = useState(0.00)
+    const [total, setTotal] = useState(0);
 
     /* - Comentario: obtenemos las compras hechas  - */
     const CargarCompras = () => {
 
         if (localStorage.getItem("compras")) {
-            setCompras(Array.from(JSON.parse(localStorage.getItem("compras"))))
+            let data = Array.from(JSON.parse(localStorage.getItem("compras")))
+            setCompras(data)
 
-            for (let i = 0; i < compras.length; i++) {
-                setTotal(total += compras[i].total)
-            }
         } else {
             setCompras([])
         }
     }
 
+    /* - Comentario: Cargamos el total a pagar - */
+    const TotalPagar = () => {
+        if (localStorage.getItem("compras")) {
+            let data = Array.from(JSON.parse(localStorage.getItem("compras")))
+            let comprasPagar = 0;
+            for (let i = 0; i < data.length; i++) {
+                comprasPagar += data[i].total
+            }
+            setTotal(comprasPagar)
+        }
+    }
+
     /* - Comentario: almacenamos las compras  - */
     const AgregarCompras = (datosCompras) => {
+        setTotal(0)
         if (datosCompras.nombre != '') {
             localStorage.setItem(
                 "compras",
@@ -41,14 +52,14 @@ export const DataProvider = ({ children }) => {
                     { idProducto: datosCompras.id_producto, imgProducto: datosCompras.img, NomProducto: datosCompras.nombre, canticad: datosCompras.canticad, total: datosCompras.totalPagar },
                 ])
             );
-
             CargarCompras()
+            TotalPagar()
         }
     }
 
     /* - Comentario: eliminamos un producto  - */
     const removeProducto = (id_producto) => {
-
+        setTotal(0)
         compras.forEach(compra => {
             if (compra.idProducto == id_producto) {
                 compras.splice(compras.indexOf(compra), 1);
@@ -56,16 +67,10 @@ export const DataProvider = ({ children }) => {
         });
         localStorage.setItem("compras", JSON.stringify(compras));
         CargarCompras()
+        TotalPagar()
     }
 
-    /* - Comentario: Cancelamos la compra  - */
-    const CancelarOrden = () => {
-        console.log("CancelarOrden");
-        localStorage.clear();
-        CargarCompras()
-    }
-
-    useEffect(() => { CargarCompras }, [])
+    useEffect(() => { CargarCompras, TotalPagar }, [])
 
     return (
         <DataContext.Provider
@@ -76,7 +81,6 @@ export const DataProvider = ({ children }) => {
                 CargarCompras,
                 AgregarCompras,
                 removeProducto,
-                CancelarOrden,
                 total
             }}
         >

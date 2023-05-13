@@ -14,7 +14,7 @@ export const ShowCategorias = () => {
   }, [params]);
 
   return (
-    <div className="container  text-center">
+    <div className="container  text-center" tabIndex={1}>
       <h1 className="Categorias mt-3">Nuestras Categorias</h1>
       <div className="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
         {categorias != null ? (
