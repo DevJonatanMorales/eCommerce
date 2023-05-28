@@ -9,6 +9,8 @@ export const ShowProducts = () => {
   const { Categoria, AgregarCompras } = useContext(DataContext)
 
   const { count, increment, decrement, reset } = ProductsCounter();
+  const [BtnDisable, SetBtnDisable] = useState(false)
+
   const params = useParams();
   const [categoria, setCategoria] = useState(null);
   const [id, setId] = useState("");
@@ -56,12 +58,16 @@ export const ShowProducts = () => {
   };
 
   const ValidarBoton = () => {
-    if (count === 1) {
-      document.getElementById('btnDecrement').disabled = false;
+    if (count > 1) {
+      SetBtnDisable(false)
     } else {
-      document.getElementById('btnDecrement').disabled = true;
+      SetBtnDisable(true)
     }
   }
+
+  useEffect(() => {
+    ValidarBoton()
+  }, [count])
 
   return (
     <>
@@ -135,7 +141,10 @@ export const ShowProducts = () => {
               <button
                 type="button"
                 className="btn-close"
-                onClick={reset}
+                onClick={() => {
+                  SetBtnDisable(false)
+                  reset()
+                }}
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -164,6 +173,7 @@ export const ShowProducts = () => {
                           onClick={() => {
                             decrement()
                           }}
+                          disabled={BtnDisable}
                           id="btnDecrement"
                         >
                           <i className="fa-solid fa-minus"></i>
@@ -187,7 +197,10 @@ export const ShowProducts = () => {
             </div>
             <div className="modal-footer">
               <button
-                onClick={reset}
+                onClick={() => {
+                  SetBtnDisable(false)
+                  reset()
+                }}
                 type="button"
                 className="btn btn-danger"
                 data-bs-dismiss="modal"
