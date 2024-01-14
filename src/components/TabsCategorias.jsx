@@ -13,20 +13,20 @@ export const TabsCategorias = () => {
   }, []);
 
   return (
-    <div tabIndex={1} className="container-fluid mb-3 bg-card">
+    <div tabIndex={1} className="container-fluid mb-3 bg-card col-12">
       <ul className="nav nav-pills">
         {categorias != null ? (
           categorias.map((categoria) =>
             <li
               key={categoria.id}
               className={
-                categoria.nombre == params.nombre
-                  ? "nav-link activo link-dark"
-                  : "nav-link mx-auto link-dark"
+                categoria.nombre === params.nombre
+                  ? "nav-link mx-auto link-dark text-light activo"
+                  : "nav-link mx-auto link-dark text-light"
               }
             >
               <Link
-                className="nav-link text-light link-dark"
+                className="nav-link mx-auto text-light link-dark"
                 aria-current="page"
                 to={`/eCommerce/catagoria/${categoria.id}/nombre/${categoria.nombre}`}
               >{categoria.nombre}</Link>

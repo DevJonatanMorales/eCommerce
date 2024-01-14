@@ -1,12 +1,15 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { DataContext } from "../context/DataContext";
-import { CardProductos } from "./CardProductos";
+import { DataContext } from "../../context/DataContext";
+import { CardProductos } from "../CardProductos";
+//import { TotalPagar } from "./TotalPagar";
 
 export const Header = () => {
 
-  const { compras, total } = useContext(DataContext)
+  const { compras , total } = useContext(DataContext)
+ 
+  //useEffect(() => TotalPagar(compras, total, setTotal), [compras])
 
   return (
     <>
@@ -50,10 +53,10 @@ export const Header = () => {
           ></button>
         </div>
         <div className="offcanvas-body" id="ShowCompras">
-          {compras.length >= 1 ? (
+          {compras != null ? (
             compras.map((compra) => (
               <CardProductos
-                producto={compra}
+                producto={[compra]}
               />
             ))
           ) : (

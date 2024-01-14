@@ -1,23 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../context/DataContext";
 import { useParams } from "react-router-dom";
-import { ProductsCounter, ShowAlert } from "../functions";
 import { TabsCategorias } from "./TabsCategorias";
 import Spinners from "./Spinners";
+import { ModalProducto } from "./modalProducto/ModalProducto";
 
 export const ShowProducts = () => {
-  const { Categoria, AgregarCompras } = useContext(DataContext)
-
-  const { count, increment, decrement, reset } = ProductsCounter();
-  const [BtnDisable, SetBtnDisable] = useState(false)
+  const { Categoria, setDetalleCompra } = useContext(DataContext)
 
   const params = useParams();
   const [categoria, setCategoria] = useState(null);
-  const [id, setId] = useState("");
-  const [img, setImg] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [precio, setPrecio] = useState("");
+
 
   useEffect(() => {
     Categoria(params.categoria, setCategoria);
@@ -25,49 +18,16 @@ export const ShowProducts = () => {
 
   //* Funcion que se encarga de abrir la ventan modal
   const OpenModal = (id, img, nombre, descripcion, precio) => {
-    setId(id);
-    setImg(img);
-    setNombre(nombre);
-    setDescripcion(descripcion);
-    setPrecio(precio);
 
+    setDetalleCompra({
+      titleModel: "Agregar",
+      id_producto: id,
+      img: img,
+      nombre: nombre,
+      descripcion: descripcion,
+      totalPagar: precio
+    })
   };
-
-  //* validamos los datos a almacenar
-  const ValidarDatos = () => {
-    let totalPagar = 0;
-
-    if (count > 0) {
-      totalPagar = precio * count;
-
-      let datosCompras = {
-        id_producto: id,
-        img: img,
-        nombre: nombre,
-        canticad: count,
-        totalPagar: totalPagar
-      }
-
-      AgregarCompras(datosCompras)
-
-      ShowAlert("Añadido a su orden", "success");
-      document.getElementById("btnCloseModel").click();
-    } else {
-      ShowAlert("Por favor, ingrese la cantidad de producto", "warning");
-    }
-  };
-
-  const ValidarBoton = () => {
-    if (count > 1) {
-      SetBtnDisable(false)
-    } else {
-      SetBtnDisable(true)
-    }
-  }
-
-  useEffect(() => {
-    ValidarBoton()
-  }, [count])
 
   return (
     <>
@@ -125,100 +85,7 @@ export const ShowProducts = () => {
         </div>
       </div>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">
-                {nombre}
-              </h1>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={() => {
-                  SetBtnDisable(false)
-                  reset()
-                }}
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <div className="row row-cols-1 row-cols-md-2 g-4">
-                <div className="col">
-                  <img
-                    src={img}
-                    className="rounded card-img-top mx-auto"
-                    style={{ width: "100%" }}
-                    alt="Error al cargar"
-                  />
-                </div>
-                <div className="col">
-                  <ul className="list-group list-group-flush">
-                    <li className="list-group-item">Producto: {nombre}</li>
-                    <li className="list-group-item">
-                      Descripcion: {descripcion}
-                    </li>
-                    <li className="list-group-item">Precio: ${precio}</li>
-                    <li className="list-group-item">
-                      <div className="d-flex justify-content-between m-0">
-                        <button
-                          className="btn btn-dark"
-                          onClick={() => {
-                            decrement()
-                          }}
-                          disabled={BtnDisable}
-                          id="btnDecrement"
-                        >
-                          <i className="fa-solid fa-minus"></i>
-                        </button>
-                        <p className="text-dark my-auto">Cantidad: {count} </p>
-                        <button
-                          className="btn btn-dark"
-                          onClick={() => {
-                            increment()
-                          }}
-                        >
-                          <i className="fa-solid fa-plus"></i>
-                        </button>
-                      </div>
-                    </li>
-                  </ul>
-
-                  <input type="hidden" id={id} />
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                onClick={() => {
-                  SetBtnDisable(false)
-                  reset()
-                }}
-                type="button"
-                className="btn btn-danger"
-                data-bs-dismiss="modal"
-                id="btnCloseModel"
-              >
-                <i className="fa-solid fa-ban"></i> Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={ValidarDatos}
-                className="btn btn-success"
-              >
-                <i className="fa-solid fa-cart-plus"></i> Añadir
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ModalProducto />
     </>
   );
 };

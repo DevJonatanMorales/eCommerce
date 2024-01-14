@@ -14,63 +14,39 @@ const Categoria = (id, state) => {
 }
 
 export const DataProvider = ({ children }) => {
-    const [compras, setCompras] = useState([]);
-    const [total, setTotal] = useState(0);
+
+    /* - Comentario: listado de compras  - */
+    const [compras, setCompras] = useState(null);
+    const [total, setTotal] = useState(0)
+
+    /* - Comentario: detalles del producto  - */
+    const [detalleCompra, setDetalleCompra] = useState({
+        titleModel: "",
+        id_producto: "",
+        img: "",
+        nombre: "",
+        descripcion: "",
+        canticad: "",
+        totalPagar: ""
+    })
 
     /* - Comentario: obtenemos las compras hechas  - */
     const CargarCompras = () => {
 
         if (localStorage.getItem("compras")) {
             let data = Array.from(JSON.parse(localStorage.getItem("compras")))
-            setCompras(data)
-
-        } else {
-            setCompras([])
-        }
-    }
-
-    /* - Comentario: Cargamos el total a pagar - */
-    const TotalPagar = () => {
-        if (localStorage.getItem("compras")) {
-            let data = Array.from(JSON.parse(localStorage.getItem("compras")))
-            let comprasPagar = 0;
-            for (let i = 0; i < data.length; i++) {
-                comprasPagar += data[i].total
+            if (data.length > 0) {
+                console.log(data[0].detalleCompra);
+                setCompras(data)
+                data.map(compra => {
+                    setTotal(total + compra.total)
+                })
+                
             }
-            setTotal(comprasPagar)
         }
     }
 
-    /* - Comentario: almacenamos las compras  - */
-    const AgregarCompras = (datosCompras) => {
-        setTotal(0)
-        if (datosCompras.nombre != '') {
-            localStorage.setItem(
-                "compras",
-                JSON.stringify([
-                    ...JSON.parse(localStorage.getItem("compras") || "[]"),
-                    { idProducto: datosCompras.id_producto, imgProducto: datosCompras.img, NomProducto: datosCompras.nombre, canticad: datosCompras.canticad, total: datosCompras.totalPagar },
-                ])
-            );
-            CargarCompras()
-            TotalPagar()
-        }
-    }
-
-    /* - Comentario: eliminamos un producto  - */
-    const removeProducto = (id_producto) => {
-        setTotal(0)
-        compras.forEach(compra => {
-            if (compra.idProducto == id_producto) {
-                compras.splice(compras.indexOf(compra), 1);
-            }
-        });
-        localStorage.setItem("compras", JSON.stringify(compras));
-        CargarCompras()
-        TotalPagar()
-    }
-
-    useEffect(() => { CargarCompras, TotalPagar }, [])
+    useEffect(() => CargarCompras(), [])
 
     return (
         <DataContext.Provider
@@ -78,9 +54,8 @@ export const DataProvider = ({ children }) => {
                 allCategorias,
                 Categoria,
                 compras,
-                CargarCompras,
-                AgregarCompras,
-                removeProducto,
+                setDetalleCompra,
+                detalleCompra,
                 total
             }}
         >
