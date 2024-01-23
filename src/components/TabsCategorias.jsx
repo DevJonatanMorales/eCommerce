@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Spinners from "./Spinners";
 
 export const TabsCategorias = () => {
-  const { allCategorias } = useContext(DataContext)
+  const { allCategorias } = useContext(DataContext);
   const [categorias, setCategorias] = useState(null);
   const params = useParams();
 
@@ -16,7 +16,7 @@ export const TabsCategorias = () => {
     <div tabIndex={1} className="container-fluid mb-3 bg-card col-12">
       <ul className="nav nav-pills">
         {categorias != null ? (
-          categorias.map((categoria) =>
+          categorias.map((categoria) => (
             <li
               key={categoria.id}
               className={
@@ -29,9 +29,11 @@ export const TabsCategorias = () => {
                 className="nav-link mx-auto text-light link-dark"
                 aria-current="page"
                 to={`/eCommerce/catagoria/${categoria.id}/nombre/${categoria.nombre}`}
-              >{categoria.nombre}</Link>
+              >
+                {categoria.nombre}
+              </Link>
             </li>
-          )
+          ))
         ) : (
           <Spinners />
         )}

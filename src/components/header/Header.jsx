@@ -3,23 +3,21 @@ import { Link } from "react-router-dom";
 
 import { DataContext } from "../../context/DataContext";
 import { CardProductos } from "../CardProductos";
-//import { TotalPagar } from "./TotalPagar";
 
 export const Header = () => {
-
-  const { compras , total } = useContext(DataContext)
- 
-  //useEffect(() => TotalPagar(compras, total, setTotal), [compras])
+  const { compras, total } = useContext(DataContext);
 
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-dark" tabIndex={1}>
         <div className="container-fluid d-flex px-3">
-
           <Link
             className="navbar-brand text-light"
-            to={"https://devjonatanmorales.github.io/eCommerce/"}
-          > <i className="fa-sharp fa-solid fa-dumpster"></i> eCommer </Link>
+            to={"/eCommerce/"}
+          >
+            {" "}
+            <i className="fa-sharp fa-solid fa-dumpster"></i> eCommer{" "}
+          </Link>
 
           <button
             id="btnCanvas"
@@ -30,7 +28,14 @@ export const Header = () => {
             aria-controls="offcanvas"
           >
             <i className="fa-sharp fa-solid fa-cart-shopping"></i>
-            <i id="counts" className={(compras != null) ? `fa-solid mx-2 fa-${compras.length}` : 'fa-solid fa-0 mx-2'} ></i>
+            <i
+              id="counts"
+              className={
+                compras != null
+                  ? `fa-solid mx-2 fa-${compras.length}`
+                  : "fa-solid fa-0 mx-2"
+              }
+            ></i>
           </button>
         </div>
       </nav>
@@ -53,23 +58,16 @@ export const Header = () => {
           ></button>
         </div>
         <div className="offcanvas-body" id="ShowCompras">
-          {compras != null ? (
-            compras.map((compra) => (
-              <CardProductos
-                producto={[compra]}
-              />
-            ))
+          {Array.isArray(compras) && compras.length > 0 ? (
+            compras.map((compra) => <CardProductos key={compra.id_producto} producto={compra} />)
           ) : (
-            <div className="alert alert-secondary" role="alert"
-            >
+            <div className="alert alert-secondary" role="alert">
               No hay ordenes
             </div>
           )}
         </div>
         <div className="offcanvas-footer px-2" id="ShowCompras">
-
-          <div className="alert alert-secondary" role="alert"
-          >
+          <div className="alert alert-secondary" role="alert">
             Total a pagar: ${total}
           </div>
         </div>

@@ -11,7 +11,7 @@ const CardCategoria = ({ categoria }) => {
             <img
                 src={categoria.imagenes.normal}
                 className="rounded card-img-top mx-auto mb-5"
-                style={{ width: "18rem" }}
+                style={{ width: "18rem", height: "200px" }}
                 alt="Error al cargar"
             />
             <Link

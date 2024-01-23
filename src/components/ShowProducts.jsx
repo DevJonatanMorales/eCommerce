@@ -6,27 +6,27 @@ import Spinners from "./Spinners";
 import { ModalProducto } from "./modalProducto/ModalProducto";
 
 export const ShowProducts = () => {
-  const { Categoria, setDetalleCompra } = useContext(DataContext)
+  const { Categoria, setDetalleCompra, setCount } = useContext(DataContext);
 
   const params = useParams();
   const [categoria, setCategoria] = useState(null);
-
 
   useEffect(() => {
     Categoria(params.categoria, setCategoria);
   }, [params]);
 
-  //* Funcion que se encarga de abrir la ventan modal
   const OpenModal = (id, img, nombre, descripcion, precio) => {
-
+    setCount(1)
     setDetalleCompra({
       titleModel: "Agregar",
       id_producto: id,
       img: img,
-      nombre: nombre,
-      descripcion: descripcion,
-      totalPagar: precio
-    })
+      nombre,
+      descripcion,
+      cantidad: 1,
+      precio: precio,
+      pagar: precio * 1,
+    });
   };
 
   return (
@@ -42,9 +42,7 @@ export const ShowProducts = () => {
                 style={{ width: "21rem" }}
               >
                 <img
-                  src={
-                    producto.imagenes.normal
-                  }
+                  src={producto.imagenes.normal}
                   className="rounded card-img-top mx-auto"
                   style={{ width: "18rem" }}
                   alt="Error al cargar"
@@ -53,7 +51,9 @@ export const ShowProducts = () => {
                 <div className="card-body m-0 position-relative">
                   <h5 className="card-title fw-bold">{producto.nombre}</h5>
                   <div className="d-flex justify-content-between mb-3">
-                    <p className="text-sm-start fw-normal" >{producto.descripcion}</p>
+                    <p className="text-sm-start fw-normal">
+                      {producto.descripcion}
+                    </p>
                   </div>
 
                   <button

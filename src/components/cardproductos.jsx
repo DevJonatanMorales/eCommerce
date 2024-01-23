@@ -1,99 +1,102 @@
-import React, { useContext, useState } from 'react'
-import { DataContext } from '../context/DataContext'
-
+import React, { useContext } from "react";
+import { DataContext } from "../context/DataContext";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { ShowAlert } from "../functions";
 
 export const CardProductos = ({ producto }) => {
-  const { compras, setDetalleCompra } = useContext(DataContext)
-const product = producto[0].detalleCompra;
-  const removeProducto = (id_producto) => {
-    setTotal(0)
-    compras.forEach(compra => {
-      if (compra.idProducto == id_producto) {
-        compras.splice(compras.indexOf(compra), 1);
-      }
-    });
-    localStorage.setItem("compras", JSON.stringify(compras));
-    CargarCompras()
-    TotalPagar()
-  }
+  const { EliminarProducto, setDetalleCompra, setCount } =
+    useContext(DataContext);
 
-  function removeCompras(producto, idProducto) {
+  function removeCompras(producto) {
     const MySwal = withReactContent(Swal);
-    let id_producto = document.getElementById(`idProducto__${idProducto}`).value
-
     MySwal.fire({
-      title: `Seguro que desea eliminar el producto ${producto}?`,
+      title: `Seguro que desea eliminar el producto ${producto.nombre}?`,
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Si, eliminar",
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        removeProducto(id_producto)
+        EliminarProducto(producto.id_producto);
       } else {
         ShowAlert("La orden no fue eliminada", "info");
       }
     });
-
   }
 
-  //* Funcion que se encarga de abrir la ventan modal
-  const OpenModal = (id_producto, img, nombre, descripcion, totalPagar) => {
-
+  const OpenModal = (
+    id_producto,
+    img,
+    nombre,
+    descripcion,
+    precio,
+    cantidad,
+    pagar
+  ) => {
+    setCount(cantidad);
     setDetalleCompra({
-      TitleModel: "Editar",
+      titleModel: "Editar",
       id_producto,
       img,
       nombre,
       descripcion,
-      totalPagar
-    })
-
+      precio,
+      pagar,
+    });
   };
 
   return (
-    <div className="card Categorias p-2" tabIndex={product.nombre}>
+    <div className="card Categorias p-2" tabIndex={producto?.nombre}>
       <div className="card-body p-0">
-
         <div className="row row-cols-2 row-cols-lg-2 g-2 g-lg-2">
           <div className="col">
-            <img className='rounded' style={{ width: "100%", height: "100%" }} src={product.img} alt={product.nombre} />
+            <img
+              className="rounded"
+              style={{ width: "100%", height: "100%" }}
+              src={producto?.img}
+              alt={producto?.nombre}
+            />
           </div>
           <div className="col">
-            <input type="hidden" id={`idProducto__${product.id_producto}`} value={product.id_producto} />
             <p className="text-md-start m-0 mb-1">
-              PLATO: <span className="text-sm-start m-0 mb-1">
-                {product.nombre}
+              PLATO:{" "}
+              <span className="text-sm-start m-0 mb-1">{producto?.nombre}</span>
+            </p>
+            <p className="text-md-start m-0 mb-1 ">
+              PRECIO:{" "}
+              <span className="text-sm-start m-0 mb-1">
+                ${producto?.precio}
               </span>
             </p>
             <p className="text-md-start m-0 mb-1">
-              CANTIDAD: <span className="text-sm-start m-0 mb-1">
-                {product.canticad}
+              CANTIDAD:{" "}
+              <span className="text-sm-start m-0 mb-1">
+                {producto?.cantidad}
               </span>
             </p>
             <p className="text-md-start m-0 mb-1 ">
-              TOTAL: <span className="text-sm-start m-0 mb-1">
-                ${product.totalPagar}
-              </span>
+              TOTAL:{" "}
+              <span className="text-sm-start m-0 mb-1">${producto?.pagar}</span>
             </p>
 
-            <div className='d-flex justify-content-between'>
+            <div className="d-flex justify-content-between">
               <button
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
                 className="btn btn-dark btn-sm "
                 type="submit"
-                onClick={() =>
+                onClick={() => {
                   OpenModal(
-                    product.id_producto,
-                    product.img,
-                    product.nombre,
-                    product.descripcion,
-                    product.totalPagar
-                  )
-                }
+                    producto?.id_producto,
+                    producto?.img,
+                    producto?.nombre,
+                    producto?.descripcion,
+                    producto?.precio,
+                    producto?.cantidad,
+                    producto?.pagar
+                  );
+                }}
               >
                 <i className="fa-solid fa-pen-to-square"></i> Editar
               </button>
@@ -101,15 +104,16 @@ const product = producto[0].detalleCompra;
               <button
                 className="btn btn-danger btn-sm"
                 type="button"
-                onClick={() => removeCompras(product.nombre, product.id_producto)}
-              ><i className="fa-solid fa-xmark"></i> Eliminar
+                onClick={() => {
+                  removeCompras(producto);
+                }}
+              >
+                <i className="fa-solid fa-xmark"></i> Eliminar
               </button>
             </div>
           </div>
         </div>
-
       </div>
-    </div >
-  )
-}
-
+    </div>
+  );
+};

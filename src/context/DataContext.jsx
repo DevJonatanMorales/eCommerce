@@ -1,65 +1,156 @@
 import { createContext, useEffect, useState } from "react";
-import { data } from '../API'
-export const DataContext = createContext()
+import { data } from "../API";
+import { ShowAlert } from "../functions";
 
-/* - Comentario: traemos todas las categorias  - */
+export const DataContext = createContext();
+
 const allCategorias = (state) => {
-    state(data.categorias)
-}
+  state(data.categorias);
+};
 
-/* - Comentario: mostramos una categoria por id  - */
 const Categoria = (id, state) => {
-    let _id = parseInt(id) - 1;
-    state(data.categorias[_id].menus)
-}
+  let _id = parseInt(id) - 1;
+  state(data.categorias[_id].menus);
+};
 
 export const DataProvider = ({ children }) => {
+  const [compras, setCompras] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [count, setCount] = useState(1);
 
-    /* - Comentario: listado de compras  - */
-    const [compras, setCompras] = useState(null);
-    const [total, setTotal] = useState(0)
+  const [detalleCompra, setDetalleCompra] = useState({
+    titleModel: "",
+    id_producto: "",
+    img: "",
+    nombre: "",
+    descripcion: "",
+    canticad: "",
+    precio: 0,
+    pagar: 0,
+  });
 
-    /* - Comentario: detalles del producto  - */
-    const [detalleCompra, setDetalleCompra] = useState({
-        titleModel: "",
-        id_producto: "",
-        img: "",
-        nombre: "",
-        descripcion: "",
-        canticad: "",
-        totalPagar: ""
-    })
+  const InicialState = () => {
+    setDetalleCompra({
+      titleModel: "",
+      id_producto: "",
+      img: "",
+      nombre: "",
+      descripcion: "",
+      canticad: "",
+      precio: 0,
+      pagar: 0,
+    });
+  };
 
-    /* - Comentario: obtenemos las compras hechas  - */
-    const CargarCompras = () => {
-
-        if (localStorage.getItem("compras")) {
-            let data = Array.from(JSON.parse(localStorage.getItem("compras")))
-            if (data.length > 0) {
-                console.log(data[0].detalleCompra);
-                setCompras(data)
-                data.map(compra => {
-                    setTotal(total + compra.total)
-                })
-                
-            }
-        }
+  const CargarCompras = () => {
+    if (localStorage.getItem("compras")) {
+      let data = Array.from(JSON.parse(localStorage.getItem("compras")));
+      if (data.length > 0) {
+        setCompras(data);
+        CalcularTotal();
+      }
     }
+  };
 
-    useEffect(() => CargarCompras(), [])
+  const ProductsCounter = () => {
+    const increment = () => setCount(count + 1);
+    const decrement = () => setCount(count - 1);
+    const reset = () => setCount(1);
 
-    return (
-        <DataContext.Provider
-            value={{
-                allCategorias,
-                Categoria,
-                compras,
-                setDetalleCompra,
-                detalleCompra,
-                total
-            }}
-        >
-            {children}
-        </DataContext.Provider>
-    )
-}
+    return { increment, decrement, reset };
+  };
+
+  const AgregarCompras = () => {
+    const listCompra = compras;
+    let isNewProduct = true;
+    listCompra.forEach((element) => {
+      if (element.id_producto === detalleCompra.id_producto) {
+        isNewProduct = false;
+      }
+    });
+    if (!isNewProduct) {
+      ShowAlert(
+        `El producto "${detalleCompra.nombre}" ya se encuentra en su orden`,
+        "warning"
+      );
+      return;
+    }
+    listCompra.push(detalleCompra);
+    setCompras(listCompra);
+    InicialState();
+    ShowAlert("Añadido a su orden", "success");
+  };
+
+  const EditarCompras = () => {
+    if (Array.isArray(compras) && compras.length > 0) {
+      const listCompra = compras.map((element) => {
+        if (element.id_producto === detalleCompra.id_producto) {
+          return detalleCompra;
+        }
+        return element;
+      });
+      setCompras(listCompra);
+      InicialState();
+      ShowAlert("Producto editado a su orden", "success");
+    }
+  };
+
+  const EliminarProducto = (id_producto) => {
+    if (Array.isArray(compras) && compras.length > 0) {
+      const listCompra = compras.filter(
+        (element) => Number(element.id_producto) !== Number(id_producto)
+      );
+
+      if (listCompra) {
+        setCompras(listCompra);
+      }
+    }
+  };
+
+  const CalcularTotal = () => {
+    if (Array.isArray(compras) && compras.length > 0) {
+      let newTotal = 0;
+      compras.forEach((item) => {
+        newTotal += item.pagar;
+      });
+      setTotal(newTotal);
+    } else {
+      setTotal(0.0);
+    }
+  };
+
+  const SaveLocalStorage = () => {
+    localStorage.setItem("compras", JSON.stringify(compras));
+  };
+
+  useEffect(() => {
+    CargarCompras();
+  }, []);
+
+  useEffect(() => {
+    CalcularTotal();
+    SaveLocalStorage();
+  }, [compras, detalleCompra]);
+
+  return (
+    <DataContext.Provider
+      value={{
+        allCategorias,
+        Categoria,
+        compras,
+        setCompras,
+        detalleCompra,
+        setDetalleCompra,
+        total,
+        count,
+        setCount,
+        ProductsCounter,
+        AgregarCompras,
+        EditarCompras,
+        EliminarProducto,
+      }}
+    >
+      {children}
+    </DataContext.Provider>
+  );
+};

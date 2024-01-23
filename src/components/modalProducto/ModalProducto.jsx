@@ -1,10 +1,17 @@
 import React, { useContext, useState, useEffect } from "react";
 import { DataContext } from "../../context/DataContext";
-import { ProductsCounter, ShowAlert } from "../../functions";
+import { ShowAlert } from "../../functions";
 
 export const ModalProducto = () => {
-  const { detalleCompra, setDetalleCompra } = useContext(DataContext);
-  const { count, increment, decrement, reset } = ProductsCounter();
+  const {
+    count,
+    detalleCompra,
+    setDetalleCompra,
+    EditarCompras,
+    AgregarCompras,
+    ProductsCounter,
+  } = useContext(DataContext);
+  const { increment, decrement, reset } = ProductsCounter();
   const [BtnDisable, SetBtnDisable] = useState(false);
 
   const ValidarBoton = () => {
@@ -14,41 +21,26 @@ export const ModalProducto = () => {
       SetBtnDisable(true);
     }
   };
-  /* - Comentario: almacenamos las compras  - */
-  const AgregarCompras = () => {
 
-    if (detalleCompra.nombre != "") {
-      localStorage.setItem(
-        "compras",
-        JSON.stringify([
-          ...JSON.parse(localStorage.getItem("compras") || "[]"),
-          {
-            detalleCompra
-          },
-        ])
-      );
-      setDetalleCompra({
-        titleModel: "",
-        id_producto: "",
-        img: "",
-        nombre: "",
-        descripcion: "",
-        canticad: "",
-        totalPagar: ""
-    })}
-  };
-  //* validamos los datos a almacenar
   const ValidarDatos = () => {
     let totalPagar = 0;
 
     if (count > 0) {
       totalPagar = detalleCompra.totalPagar * count;
+      setDetalleCompra({
+        ...detalleCompra,
+        totalPagar,
+      });
 
-      detalleCompra.totalPagar = totalPagar;
-      AgregarCompras();
+      if (detalleCompra.titleModel === "Editar") {
+        document.getElementById("btnCloseModel").click();
+        EditarCompras();
+      }
 
-      ShowAlert("Añadido a su orden", "success");
-      document.getElementById("btnCloseModel").click();
+      if (detalleCompra.titleModel === "Agregar") {
+        document.getElementById("btnCloseModel").click();
+        AgregarCompras();
+      }
     } else {
       ShowAlert("Por favor, ingrese la cantidad de producto", "warning");
     }
@@ -56,6 +48,12 @@ export const ModalProducto = () => {
 
   useEffect(() => {
     ValidarBoton();
+    const { precio } = detalleCompra;
+    setDetalleCompra({
+      ...detalleCompra,
+      cantidad: count,
+      pagar: precio * count,
+    });
   }, [count]);
 
   return (
@@ -70,7 +68,7 @@ export const ModalProducto = () => {
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="exampleModalLabel">
-              {detalleCompra.TitleModel}
+              <strong>{detalleCompra.titleModel.toUpperCase()} COMPRA</strong>
             </h1>
             <button
               type="button"
@@ -89,20 +87,23 @@ export const ModalProducto = () => {
                 <img
                   src={detalleCompra.img}
                   className="rounded card-img-top mx-auto"
-                  style={{ width: "100%" }}
+                  style={{ width: "100%", height: "300px" }}
                   alt="Error al cargar"
                 />
               </div>
               <div className="col">
                 <ul className="list-group list-group-flush">
                   <li className="list-group-item">
-                    Producto: {detalleCompra.nombre}
+                    <strong>Producto:</strong> {detalleCompra.nombre}
                   </li>
                   <li className="list-group-item">
-                    Descripcion: {detalleCompra.descripcion}
+                    <strong>Descripcion:</strong> {detalleCompra.descripcion}
                   </li>
                   <li className="list-group-item">
-                    Precio: ${detalleCompra.totalPagar}
+                    <strong>Precio:</strong> ${detalleCompra.precio}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>Pagar:</strong> ${detalleCompra.pagar}
                   </li>
                   <li className="list-group-item">
                     <div className="d-flex justify-content-between m-0">
@@ -116,7 +117,9 @@ export const ModalProducto = () => {
                       >
                         <i className="fa-solid fa-minus"></i>
                       </button>
-                      <p className="text-dark my-auto">Cantidad: {count} </p>
+                      <p className="text-dark my-auto">
+                        <strong>Cantidad:</strong> {count}{" "}
+                      </p>
                       <button
                         className="btn btn-dark"
                         onClick={() => {
@@ -151,7 +154,8 @@ export const ModalProducto = () => {
               onClick={ValidarDatos}
               className="btn btn-success"
             >
-              <i className="fa-solid fa-cart-plus"></i> Añadir
+              <i className="fa-solid fa-cart-plus"></i>{" "}
+              {detalleCompra.titleModel === "Agregar" ? "Añadir" : "Editar"}
             </button>
           </div>
         </div>
