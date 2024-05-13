@@ -1,22 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home } from "./pages/Home";
-import { Categoria } from "./pages/Categoria";
+import { ShowProducts } from "./pages/showProducts/ShowProducts";
+import { Categories } from "./pages/categories/Categories";
+
 
 export const App = () => {
   return (
     <BrowserRouter>
-      
       <Routes>
-        <Route
-          path="/eCommerce/"
-          element={<Home />}
-        ></Route>
+        <Route path="/eCommerce/" element={<Categories />}></Route>
         <Route
           path="/eCommerce/catagoria/:categoria/nombre/:nombre"
-          element={<Categoria />}
+          element={<ShowProducts />}
         ></Route>
       </Routes>
     </BrowserRouter>
   );
-}
-
+};

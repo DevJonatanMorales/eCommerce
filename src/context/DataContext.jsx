@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import { data } from "../API";
-import { ShowAlert } from "../functions";
+import { data } from "../services/API";
+import { ShowAlert } from "../utils/showAlert";
 
 export const DataContext = createContext();
 
@@ -14,9 +14,9 @@ const Categoria = (id, state) => {
 };
 
 export const DataProvider = ({ children }) => {
+  const [count, setCount] = useState(1);
   const [compras, setCompras] = useState([]);
   const [total, setTotal] = useState(0);
-  const [count, setCount] = useState(1);
 
   const [detalleCompra, setDetalleCompra] = useState({
     titleModel: "",
@@ -50,14 +50,6 @@ export const DataProvider = ({ children }) => {
         CalcularTotal();
       }
     }
-  };
-
-  const ProductsCounter = () => {
-    const increment = () => setCount(count + 1);
-    const decrement = () => setCount(count - 1);
-    const reset = () => setCount(1);
-
-    return { increment, decrement, reset };
   };
 
   const AgregarCompras = () => {
@@ -144,10 +136,10 @@ export const DataProvider = ({ children }) => {
         total,
         count,
         setCount,
-        ProductsCounter,
         AgregarCompras,
         EditarCompras,
         EliminarProducto,
+        InicialState,
       }}
     >
       {children}
