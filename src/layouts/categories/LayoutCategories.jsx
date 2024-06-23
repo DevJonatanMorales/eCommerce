@@ -1,6 +1,6 @@
 import React from "react";
-import { Banner } from "../../ui/banner/Banner";
-import { CarouselBanner } from "../../ui/carouselBanner/CarouselBanner";
+import { Banner } from "../../components/";
+import { CarouselBanner } from "../../components/";
 
 
 export const LayoutCategorias = ({ children }) => {

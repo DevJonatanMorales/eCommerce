@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { DataContext } from "../../context/DataContext";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import useDataModal from "../../hook/useDataModal";
-import { ShowAlert } from "../../utils/showAlert";
-import { TITLE_MODAL } from "../../constants/titleModal";
+import useDataModal from "../../../hook/useDataModal";
+import { ShowAlert } from "../../../utils/showAlert";
+import { DataContext } from "../../../context/DataContext";
+import { TITLE_MODAL } from "../../../constants/titleModal";
 
 export const CardProducts = ({ producto }) => {
   const titleModel = TITLE_MODAL.MODIFICAR;
@@ -78,7 +78,7 @@ export const CardProducts = ({ producto }) => {
               <button
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
-                className="btn btn-dark btn-sm "
+                className="btn btn-success btn-sm "
                 type="submit"
                 onClick={() => {
                   handleClick(

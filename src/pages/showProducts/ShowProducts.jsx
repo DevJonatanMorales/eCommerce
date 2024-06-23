@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { LayoutShowProducts } from "../../layouts/showProducts/LayoutShowProducts";
 import { DataContext } from "../../context/DataContext";
 import { useParams } from "react-router-dom";
-import { Spinners } from "../../ui/spinners/Spinners";
+import { Spinners } from "../../components/";
 import { CardProduct } from "../../components/ShowProducts/cardProduct/CardProduct";
 import { ModalProducto } from "../../components/ShowProducts/modalProducto/ModalProducto";
 

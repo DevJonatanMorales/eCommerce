@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
-import { DataContext } from "../../context/DataContext";
 import { Spinners } from "../spinners/Spinners";
+import { DataContext } from "../../../context/DataContext";
 
 export const CarouselBanner = () => {
   const [categorias, setCategorias] = useState(null);

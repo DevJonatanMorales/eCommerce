@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { DataContext } from "../../context/DataContext";
+import { DataContext } from "../../../context/DataContext";
 import { CardProducts } from "../cardProducts/CardProducts";
 
 export const Banner = () => {

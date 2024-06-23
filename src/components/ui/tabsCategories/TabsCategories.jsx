@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { DataContext } from "../../context/DataContext";
 import { Link, useParams } from "react-router-dom";
 import { Spinners } from "../spinners/Spinners";
+import { DataContext } from "../../../context/DataContext";
  
 export const TabsCategories = () => {
   const { allCategorias } = useContext(DataContext);

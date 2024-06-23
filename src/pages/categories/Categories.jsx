@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { LayoutCategorias } from "../../layouts/categories/LayoutCategories";
-import { DataContext } from "../../context/DataContext";
 import { useParams } from "react-router-dom";
-import { CardCategory } from "../../ui/cardCategory/CardCategory";
-import { Spinners } from "../../ui/spinners/Spinners";
+import { CardCategory } from "../../components/";
+import { Spinners } from "../../components/";
+import { DataContext } from "../../context/DataContext";
 
 export const Categories = () => {
   const { allCategorias } = useContext(DataContext);
